@@ -1,0 +1,20 @@
+---
+
+dependencies: []
+
+galaxy_info:
+  role_name: php5
+  author: honomoa
+  description: PHP is a popular general-purpose scripting language that is especially suited to web development.
+  company: "Moa"
+  license: "license (CC BY-SA 3.0)"
+  min_ansible_version: 2.4
+  platforms:
+  - name: Ubuntu
+    versions:
+    - xenial
+  galaxy_tags:
+    - development
+    - php
+    - php5
+    - php5.6

@@ -1,0 +1,39 @@
+---
+
+- name: Install PPA
+  apt_repository: repo='ppa:ondrej/php' state=present
+
+- name: Update apt
+  apt: update_cache=yes
+
+- name: Install PHP
+  action: apt pkg={{ item }} state=present
+  with_items: "{{ php5_packages }}"
+
+- name: PHP-CLI ensure timezone is set in php.ini
+  lineinfile: dest={{ php_root }}/cli/php.ini regexp='date.timezone =' line='date.timezone = {{ date_timezone }}'
+
+- name: PHP-CLI ensure expose_php is off in php.ini
+  lineinfile: dest={{ php_root }}/cli/php.ini regexp='expose_php =' line='expose_php = Off'
+
+- name: PHP-CLI ensure short_open_tag is off in php.ini
+  lineinfile: dest={{ php_root }}/cli/php.ini regexp='short_open_tag =' line='short_open_tag = On'
+
+- name: PHP-CLI ensure post_max_size is set in php.ini
+  lineinfile: dest={{ php_root }}/cli/php.ini regexp='post_max_size =' line='post_max_size = {{ post_max_size }}'
+
+- name: PHP-FPM ensure timezone is set in php.ini
+  lineinfile: dest={{ php_root }}/fpm/php.ini regexp='date.timezone =' line='date.timezone = {{ date_timezone }}'
+
+- name: PHP-FPM ensure expose_php is off in php.ini
+  lineinfile: dest={{ php_root }}/fpm/php.ini regexp='expose_php =' line='expose_php = Off'
+
+- name: PHP-FPM ensure short_open_tag is off in php.ini
+  lineinfile: dest={{ php_root }}/fpm/php.ini regexp='short_open_tag =' line='short_open_tag = On'
+
+- name: PHP-FPM ensure post_max_size is set in php.ini
+  lineinfile: dest={{ php_root }}/fpm/php.ini regexp='post_max_size =' line='post_max_size = {{ post_max_size }}'
+
+- name: PHP-FPM ensure listen
+  lineinfile: "dest={{ php_root }}/fpm/pool.d/www.conf state=present regexp='^;?listen =' line='listen = {{ fpm_listen }}'"
+  notify: restart php5-fpm
